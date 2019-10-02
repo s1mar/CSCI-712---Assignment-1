@@ -6,7 +6,7 @@
 
 ## What does it do or the task at hand?
 
-Interpolation rules: 
+Interpolation rules:      
 ¤ Translation may be interpolated using: Basic linear interpolation  
 ¤ Rotation may be interpolated using: Spherical linear interpolation of quaternions  
 ¤ Will need to convert axis/angle -> quaternions
