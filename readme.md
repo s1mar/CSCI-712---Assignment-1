@@ -7,15 +7,15 @@
 ## What does it do or the task at hand?
 
 Interpolation rules: 
-¤ Translation may be interpolated using: Basic linear interpolation
-¤ Rotation may be interpolated using: Spherical linear interpolation of quaternions 
+¤ Translation may be interpolated using: Basic linear interpolation  
+¤ Rotation may be interpolated using: Spherical linear interpolation of quaternions  
 ¤ Will need to convert axis/angle -> quaternions
 
 
 ## A note about the camera placement
 
-¤ Keep camera static 
-¤ Place camera so object will not move off screen
+¤ Keep camera static     
+¤ Place camera so object will not move off screen        
 
 ## Additional Mechanic
 
