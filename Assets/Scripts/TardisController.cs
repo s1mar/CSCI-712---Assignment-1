@@ -18,15 +18,14 @@ public class TardisController : MonoBehaviour {
 
 	private bool isProcessingSet = false;
 
-	private bool successfullyFetchedInput = false;
+	
 	void Start() {			
 			StartCoroutine(InitFromInputDoc());
-
 	}
 
 	
 	bool processFinished = false;
-	private void animateLerpPosV2(){
+	private void animateAccordingToFrameData(){
 
 			if(!isProcessingSet && list_AnimationAttrs.Count==0){
 				//it's not lerping and the count is zero, then return
@@ -55,7 +54,7 @@ public class TardisController : MonoBehaviour {
 					
 					transform.position = Vector3.Lerp(startPos,endPos,calculateSmoothStep(travelPerc));
 					targetRotation.Normalize();
-					transform.rotation = Quaternion.Slerp(transform.rotation,targetRotation,travelPerc);
+					transform.rotation = Quaternion.Slerp(transform.rotation,targetRotation,calculateSmoothStep(travelPerc));
 					
 					Debug.Log(Time.time);
 				}else
@@ -74,42 +73,40 @@ public class TardisController : MonoBehaviour {
 
 
 	void Update(){
-			if(successfullyFetchedInput && !processFinished)
-				animateLerpPosV2();
+			if(!processFinished)
+				animateAccordingToFrameData();
 	}
 
 
 	
 	private IEnumerator InitFromInputDoc(){
-
-			//UnityWebRequest webRequest = new UnityWebRequest()
-			initWithDummyData();
-			successfullyFetchedInput = true;
-
-
+			getKeyFramesFromTextAsset();
 			yield break;
-
 	}
 
 	
 
-private void initWithDummyData(){
-	List<AnimationAttr> dummyData = new List<AnimationAttr>();
-	dummyData.Add(new AnimationAttr(0.0f,0.0f,0.0f,0.0f,1.0f,1.0f,-1.0f,0.0f));
-	dummyData.Add(new AnimationAttr(1.0f,  4.0f, 0.0f, 0.0f, 1.0f, 1.0f, -1.0f, 30.0f));
-	dummyData.Add(new AnimationAttr(2.0f,8.0f, 0.0f, 0.0f, 1.0f, 1.0f, -1.0f, 90.0f));
-	dummyData.Add(new AnimationAttr(3.0f,12.0f, 12.0f, 12.0f, 1.0f, 1.0f, -1.0f, 180.0f));
-	dummyData.Add(new AnimationAttr(4.0f,  12.0f, 18.0f, 18.0f, 1.0f, 1.0f, -1.0f, 270.0f));
-	dummyData.Add(new AnimationAttr(5.0f,  18.0f, 18.0f, 18.0f, 0.0f, 1.0f, 0.0f, 90.0f));
-	dummyData.Add(new AnimationAttr(6.0f,  18.0f, 18.0f, 18.0f, 0.0f, 0.0f, 1.0f, 90.0f));
-	dummyData.Add(new AnimationAttr(7.0f,  25.0f, 12.0f, 12.0f, 1.0f, 0.0f, 0.0f, 0.0f));
-	dummyData.Add(new AnimationAttr(8.0f,  25.0f, 0.0f, 18.0f, 1.0f, 0.0f, 0.0f, 0.0f));
-	dummyData.Add(new AnimationAttr(9.0f, 25.0f, 1.0f, 18.0f, 1.0f, 0.0f, 0.0f, 0.0f));
-	
-	list_AnimationAttrs = dummyData;
-	
-}
-	
-}
+private void getKeyFramesFromTextAsset(){
 
+
+	TextAsset keyframesText = Resources.Load("keyframes") as TextAsset;
+	string[] keyFramesByLines = keyframesText.text.Split("\r\n".ToCharArray(),System.StringSplitOptions.RemoveEmptyEntries);
+	foreach (string key in keyFramesByLines)
+	{
+			List<float> elementdetails =new List<float>(); //t,x,y,z,xa,ya,za,angle;
+			string[] sub_entries = key.Split(new char[]{',',' '},System.StringSplitOptions.RemoveEmptyEntries);
+			foreach (string item in sub_entries)
+			{
+				elementdetails.Add(float.Parse(item.Trim()));
+			}
+
+			AnimationAttr animationAttr = new AnimationAttr(elementdetails[0],elementdetails[1],elementdetails[2],elementdetails[3],elementdetails[4],elementdetails[5],elementdetails[6],elementdetails[7]);
+			Debug.Log(animationAttr);
+			list_AnimationAttrs.Add(animationAttr);
+	}
+
+
+}
+	
+}
 

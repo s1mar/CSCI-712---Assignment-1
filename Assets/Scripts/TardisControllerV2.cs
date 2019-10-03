@@ -1,53 +1,38 @@
-﻿
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class TardisControllerV2 : MonoBehaviour {
-	[SerializeField] private string url = "https://drive.google.com/open?id=1mTEwFADqozcmoH47MQ6eS6sMoDYsEHJKlYJJUuW9xPo";
-	//It should always be sorted, basically each entry increasing in time
-	List<AnimationAttr> list_AnimationAttrs = new List<AnimationAttr>();
-	
-	private int tDStep =1;
 
-	void Start () {
-		StartCoroutine(InitFromInputDoc());
+[SerializeField] private string url = "https://drive.google.com/open?id=1mTEwFADqozcmoH47MQ6eS6sMoDYsEHJKlYJJUuW9xPo";
+	//It should always be sorted, basically each entry increasing in time
+	List<AnimationAttr> list_AnimationAttrs = new List<AnimationAttr>(); 
+	private bool successfullyFetchedInput;
+
+	[SerializeField] private GameObject tardisShip;
+	private Engine_AssignmentUno animationEngine;
+
+
+	private void Start() {
+			StartCoroutine(InitFromInputDoc());
+	}
+
+	private void Awake() {
+		tardisShip.SetActive(false);
 	}
 	
-
-		private IEnumerator InitFromInputDoc(){
-
+	private IEnumerator InitFromInputDoc(){
 			//UnityWebRequest webRequest = new UnityWebRequest()
 			initWithDummyData();
-
-			AnimationAttr firstAnimationAttr = list_AnimationAttrs[0];
-			if(firstAnimationAttr.time==0.0f)
-			{
-				transform.position = firstAnimationAttr.position;
-				transform.rotation = firstAnimationAttr.quaternion;
-				list_AnimationAttrs.RemoveAt(0);
-				
-			}
-
-			StartCoroutine(processRoutines());
+			successfullyFetchedInput = true;
+			//Now that we have the data, let's start the engine
+			animationEngine = gameObject.AddComponent<Engine_AssignmentUno>();
+			animationEngine.Initialize(list_AnimationAttrs,transform,tardisShip); //initialized the engine	
+			animationEngine.startProcessing();
 			yield break;
 	}
 
-	private IEnumerator processRoutines(){
-		while(list_AnimationAttrs.Count>0){
-				AnimationAttr currentAniAttr= list_AnimationAttrs[0];
-				list_AnimationAttrs.RemoveAt(0);
-				
-				float sTime = Time.time;
-				float currentStep = Time.time - sTime;
-				while(currentStep <=tDStep){
-					float perc_step = currentStep*currentStep*(3.0f - 2.0f*currentStep);
-					transform.position = Vector3.Lerp(transform.position,currentAniAttr.position,perc_step); 
-				}
 	
-		}
-			yield return null;
-	}
 
 private void initWithDummyData(){
 	List<AnimationAttr> dummyData = new List<AnimationAttr>();
@@ -66,5 +51,6 @@ private void initWithDummyData(){
 	
 }
 	
-	
 }
+
+
