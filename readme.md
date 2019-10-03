@@ -17,9 +17,6 @@ Interpolation rules:
 ¤ Keep camera static     
 ¤ Place camera so object will not move off screen        
 
-## Additional Mechanic
-
-Once the animation ends, to replay it simply press on the replay button on the top-left edge of the screen.
 
 ## Screenshot
 
