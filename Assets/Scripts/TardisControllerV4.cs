@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,6 +7,7 @@ public class TardisControllerV4 : MonoBehaviour {
 
 	[SerializeField]int framesBetweenEachKeyFrame = 90; // this will help with the smoothning while lerping
 	[SerializeField] GameObject TardisObject;
+	[SerializeField] GameObject ReloadBtn;
 	List<AnimationAttr> animations = new List<AnimationAttr>(0);
 	Queue<Vector3> lerpQueue;
 	Queue<Quaternion> slerpQueue;
@@ -27,6 +27,9 @@ public class TardisControllerV4 : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		animations.Clear();
+
 		//get the animation per second data from the text asset
 		animations.AddRange(getKeyFramesFromTextAsset());
 
@@ -75,6 +78,8 @@ public class TardisControllerV4 : MonoBehaviour {
 						if(endOfRotationSequence && endOfTranslationSequence){
 							startProcessing = false;
 							Debug.Log("Sequence Finished in: "+Time.time);
+							GetComponent<AudioSource>().Stop();
+							ReloadBtn.SetActive(true);
 							return;
 						}
 
@@ -205,5 +210,14 @@ public static List<Vector3> createCatmullRomSpline(List<Vector3> coords, int ste
 private static float calculateSmoothStep(float currentStep){
 			return currentStep*currentStep*(3.0f - 2.0f*currentStep);
 
+	}
+
+
+	public void onClick_Reload(){
+		ReloadBtn.SetActive(false);
+		endOfRotationSequence = false;
+		endOfTranslationSequence = false;
+		Start();
+		GetComponent<AudioSource>().Play();
 	}
 }
