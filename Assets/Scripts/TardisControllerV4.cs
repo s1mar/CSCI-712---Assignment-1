@@ -58,6 +58,8 @@ public class TardisControllerV4 : MonoBehaviour {
 		if(slerpQueue.Count>0){
 		fromQuat = transform.rotation;
 		toQuat  = slerpQueue.Dequeue();
+		fromQuat.Normalize();
+		toQuat.Normalize();
 		}
 		else{
 			endOfRotationSequence = true;
@@ -67,7 +69,7 @@ public class TardisControllerV4 : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if(startProcessing){
 
 						if(endOfRotationSequence && endOfTranslationSequence){
@@ -109,9 +111,12 @@ private void updateRotationPoints(){
 	if(slerpQueue.Count>0){
 			fromQuat = toQuat;
 			toQuat= slerpQueue.Dequeue();
+			fromQuat.Normalize();
+			toQuat.Normalize();
 	}else{
 		//all sequences processed
 		endOfRotationSequence = true;
+		Debug.Log("Rotation ended at:"+Time.time);
 	}
 }
 
@@ -133,6 +138,7 @@ private void translate(){
 		transform.position = position;
 	}else{
 		endOfTranslationSequence = true;
+		Debug.Log("Translation ended at:"+Time.time);
 	}
 
 }
