@@ -5,7 +5,8 @@ using System.Linq;
 public class TardisControllerV4 : MonoBehaviour {
 
 
-	[SerializeField]int framesBetweenEachKeyFrame = 90; // this will help with the smoothning while lerping
+	[SerializeField]int framesBetweenEachKeyFrame = 56; // this will help with the smoothning while lerping
+	[SerializeField] float tension = 1;
 	[SerializeField] GameObject TardisObject;
 	[SerializeField] GameObject ReloadBtn;
 	List<AnimationAttr> animations = new List<AnimationAttr>(0);
@@ -52,7 +53,7 @@ public class TardisControllerV4 : MonoBehaviour {
 		List<Vector3> rawPosList = animations.Select(item=>item.position).ToList();
 		
 		
-		lerpQueue = new Queue<Vector3>(createCatmullRomSpline(rawPosList,framesBetweenEachKeyFrame));
+		lerpQueue = new Queue<Vector3>(createCatmullRomSpline(rawPosList,framesBetweenEachKeyFrame,tension));
 		slerpQueue = new Queue<Quaternion>(animations.Select(item=>item.quaternion));
 	
 		//Now that we have the queues set up, let;s process them
@@ -170,7 +171,7 @@ private List<AnimationAttr> getKeyFramesFromTextAsset(){
 
 	return list_AnimationAttrs;
 }
-public static List<Vector3> createCatmullRomSpline(List<Vector3> coords, int stepsPerTransition = 3, float tension = 1)
+public static List<Vector3> createCatmullRomSpline(List<Vector3> coords, int stepsPerTransition = 60, float tension = 1)
     {
 		Debug.Log("Pre interpolation points: "+coords.Count);
 		Debug.Log("Steps per curve: "+stepsPerTransition);
