@@ -1,4 +1,4 @@
-# CSCI 712 Assignment 1
+# Simplified-Key-Framing-System
 
  Goal: Write a simplified key framing system that will translate and rotate a single object based on a set of key frames. 
  Made by Simarjot Khanna under the supervision of Prof. Joe Geigel, D.Sc
